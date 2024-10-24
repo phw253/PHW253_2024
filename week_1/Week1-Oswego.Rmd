@@ -1,0 +1,169 @@
+--
+title: "Week 1 Oswego Assignment"
+author: "Wayne Enanoria"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+In this session, we will use data from a church outbreak in a small village of Lycoming, Oswego County, NY, on April 18, 1940. 
+
+## Step 1: Import data set
+
+```{r}
+oswego <- read.csv("~/PHW253_2023/PHW253Oswegorevised.csv",
+                   header=TRUE,
+                   na.strings=".")
+```
+
+Here, we used the read.csv() command to import the .csv file. There are many ways to import an excel file into R. The possible packages described in R resources include: rio, here, openxlsx
+
+In this R markdown file (.Rmd) file, you may want to document what this file does. You can type anything outside of the R code blocks to document whatever you want to.
+
+
+## Step 2. Document the R Code 
+
+It can help both you (when you need to review the R file at a later date) and your colleagues if they need to update/re-run your R file.
+
+For example, let's say we want to do three things:
+
+1. see the number of records and variables in the data set;
+2. look at the structure of the data set; and 
+3. look at the first 5 rows of the data set.
+
+We can type the following command to do these three things.
+
+```{r}
+# 1. See the number of records and variables in the data set
+dim(oswego)
+```
+
+There are `r dim(oswego)[1]` records (observations) and `r dim(oswego)[2]` variables in the data set.
+
+```{r}
+# 2. Look at the structure of the data set
+str(oswego)
+
+# 3. Look at the first 5 rows of the data set
+oswego[1:5,]
+```
+
+
+## Step 3: Review the Data
+
+We can look at more details of the data set. There are many ways to get familiar with your dataset in R. Below are a couple of examples and there are examples/specific packages listed in The Epidemiologist R Handbook 8 Cleaning data and core functions in The Epidemiologist R Handbook (epirhandbook.com).
+
+```{r}
+# List the column names
+names(oswego)
+
+# Check dimensions (number of rows and number of columns)
+dim(oswego)
+
+# to view the first few rows of the dataset, type "head(dataset)".
+head(oswego)
+
+# to view the last few rows of the dataset the code is tail(dataset)
+tail(oswego)
+
+# to see the frequency of one variable use table command
+## code is table(dataset$variablename)
+table(oswego$ill)
+
+# to see the frequency of one variable with missing data values 
+# include the option to not exclude missing values
+## code is table(dataset$variablename, exclude=NULL)
+
+table(oswego$onsetdate, exclude=NULL)
+table(oswego$onsetdate)
+
+```
+
+## Step 4: Subset the Data
+
+The code in this section will demonstrate three ways to subset data. For example, let's say we wanted to create a new data set with only ill cases.
+
+### Method 1: Use the dplyr R package to filter the data based on criteria
+```{r}
+library(dplyr)
+## dplyr needed for mutate or recode
+
+oswego_illonly <- oswego %>% 
+  filter(ill == "Y")   # keep only rows where ill is equal to "Y"
+
+dim(oswego_illonly)
+table(oswego_illonly$ill, exclude=NULL)
+
+# check against original data
+table(oswego$ill, exclude=NULL)
+```
+
+### Method 2: Subset by indexing
+```{r}
+illdta <- oswego[oswego$ill=="Y", ]
+dim(illdta)
+```
+
+### Method 3: Subset using subset() function
+```{r}
+illdta2 <- subset(oswego, ill=="Y")
+dim(illdta2)
+```
+
+## Step 5: Recode variables
+
+To illustrate how to recode variables, we will use a specific example involving our data set. Let's say we want to recode the age variable and assign age categories to each individual record based on the age of the individual. The age categories are:
+
+* < 1 year
+* 1-5 years
+* 6-10 years
+* 11-20 years
+* 21-30 years
+* 31-40 years
+* 41-50 years
+* 51-60 years
+* 60+ years
+
+Using the age categories, we also want to know how many records are in each age group.
+
+### Method 1: Using the cut() command with the age variable
+
+We can do this with the following code:
+
+```{r}
+# first look at age variable
+oswego$age
+
+# now create age categories based on cut points
+oswego$agecat <- cut(x=oswego$age,
+                     breaks=c(0, 1, 5, 10, 20, 30, 40, 50, 60, 200),
+                     labels=c("<1", "1-5", "6-10", "11-20", "21-30","31-40", "41-50", "51-60", "61+"))
+# check your work
+table(oswego$age, oswego$agecat, exclude=NULL)
+
+# create frequency table
+table(oswego$agecat, exclude=NULL)
+as.matrix(table(oswego$agecat, exclude=NULL))
+```
+
+### Method 2: Use the recode() command
+
+As we have seen, the data set has a variable called "ill" with Y/N to denote if the record was a reported as being ill ("Yes") or not ("No"). We can use the recode() command to turn the Ns into "No" and the Ys into "Yes".
+
+```{r}
+# uses the recode() function from dplyr R package
+table(oswego$ill, exclude=NULL)
+
+# create new variable
+oswego$xill <- recode(oswego$ill, Y = "Yes", N = "No")
+table(oswego$xill, exclude=NULL)
+
+# check your work
+table(oswego$xill, oswego$ill, exclude=NULL)
+```
+

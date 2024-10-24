@@ -1,0 +1,135 @@
+---
+title: "Descriptive Epidemiology Assignment"
+author: "PHW253 Teaching Team"
+output:
+  pdf_document: default
+  pdf: default
+---
+
+```{r setup, include=FALSE}
+# Show R code in output for all R chunks
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+In this R Markdown (Rmd) file we provide a template to help you complete the R assignments for the first three weeks of the course. 
+
+The sections (Week 1, Week 2, and Week 3) build on each other sequentially. So you will need your R code from Week 1 to complete Week 2, and your code from Weeks 1 and 2 to create your final submission in Week 3. We suggest keeping all you code for this 3-part assignment in this one Rmd.
+
+The dataset for this assignment is Descriptive_Epi_Assignment_line_list_data.xlsx.
+
+--------------------------------------------------------------------------------
+
+# Week 1 - Data Check for the Descriptive Epi Assignment
+
+## Step 1: You may have to install new packages for this assignment. 
+
+```{r}
+# (just run once and then comment out each install statement by adding # in front of each line so you are not reinstalling the packages every time you run this file.)
+install.packages("rio")
+install.packages("dplyr")
+install.packages("janitor")
+install.packages("flextable")
+install.packages("lubridate")
+install.packages("incidence2")
+install.packages("ggplot2")
+```
+
+```{r}
+# load packages
+# run every time
+
+# rio needed for import code
+library("rio")
+
+# dplyr needed for mutate or recode
+library(dplyr)
+
+# janitor needed for crosstable
+library(janitor)
+
+# flextable needed for export formatted table to Word file
+library(flextable)
+
+# for dates in R
+library(lubridate)
+
+# ggplot2 for epicurves & data visualization
+library (ggplot2)
+
+# incidence2 for epicurves of linelist data
+library (incidence2)
+```
+
+## Step 2: Import the data into the R environment and look at the structure of the dataset (that is, the rows and columns).
+
+Refer to the R Assignments page on bCourses for detailed instructions and suggested R videos to review.
+
+```{r}
+# ADD CODE HERE
+```
+
+## Step 3: create new dataset and keep only rows where MLVA is an A, A2, A3 pattern. MLVA is an acronym that stands for Multilocus
+ Variable-number tandem-repeat Analysis, a molecular typing technique to help distinguish between different strains of E. coli.
+
+* There are 92 observations in the data set, with 75 cases with MLVA pattern A, 1 case with pattern A2, and 1 case with pattern A3.
+* In the data set, you will notice there are many MLVA patterns (that is, there are patterns A, A2, and A3).
+* You will have to select out only the rows where MLVA is A, A2, or A3.
+* The other E. coli cases that did not have MLVA pattern A, A2, or A3 are not part of this outbreak and can be discarded from the analysis.
+
+```{r}
+#ADD CODE HERE
+```
+
+
+## Step 4: Focus on the hospitalization variable and the tabulate number of hospitalizations "Yes" "No" and "Unknown"
+
+```{r}
+#ADD CODE HERE
+```
+
+--------------------------------------------------------------------------------
+
+# Week 2 - Data Check for the Descriptive Epi Assignment
+
+Refer to the R Assignments page on bCourses for detailed instructions and suggested R videos to review.
+
+## Step 1: Focus on the State variable and tabulate the number of observations for each state.
+```{r}
+#ADD CODE HERE
+```
+
+## Step 2: Define region using census definition  https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
+```{r}
+#ADD CODE HERE
+```
+
+Step 3: Look at region variable and tabulate the number of cases by region
+```{r}
+#ADD CODE HERE
+```
+
+Step 4: Dates in R: What format is OnsetDate in?
+```{r}
+#ADD CODE HERE
+```
+
+Step 5: Create a new variable with onset date in ymd date format and confirm new variable format
+```{r}
+#ADD CODE HERE
+```
+
+Step 7: Tabulate the new variable to obtain date ranges and determine if there are missing values
+```{r}
+#ADD CODE HERE
+```
+
+
+--------------------------------------------------------------------------------
+
+# Week 3 – Descriptive Epidemiology Assignment Final Submission
+
+
+For your final submission, we suggest you make a copy of this Rmd and then reformat it to meet the requirements of the final submission, as detailed on the R Assignments page on bCourses.
+
