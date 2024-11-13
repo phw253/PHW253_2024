@@ -1,0 +1,157 @@
+---
+title: "Hypothesis Testing Assignment"
+author: "PHW253 Teaching Team"
+output:
+  pdf_document: default
+  pdf: default
+---
+
+```{r setup, include=FALSE}
+# Show R code in output for all R chunks
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+In this R Markdown (Rmd) file we provide a template to help you complete the R assignments for the last three weeks of the course. 
+
+The sections (Week 4, Week 5, and Week 6) build on each other sequentially. So you will need your R code from Week 4 to complete Week 5, and your code from Weeks 4 and 5 to create your final submission in Week 6. We suggest keeping all you code for this 3-part assignment in this one Rmd.
+
+The dataset for this assignment is Hypothesis_Testing_Assignment_case_control_data.xlsx
+
+--------------------------------------------------------------------------------
+
+# Week 4 - Data Check for the Hypothesis Testing Assignment
+
+Call in the necessary R packages for this assignment.
+
+```{r}
+# install packages
+# (just run once and then comment out by adding # in front of line)
+install.packages("rio")
+install.packages("skimr")
+install.packages("dplyr")
+install.packages("janitor")
+install.packages("survival")
+```
+
+## Step 1: Load packages
+ 
+```{r}
+# run every time
+
+# rio needed for import code
+library(rio)
+# dplyr needed for mutate or recode
+library(dplyr)
+# janitor needed for crosstable
+library(janitor)
+# survival needed for clogit
+library(survival)
+```
+
+
+## Step 2: Import the data. Examine the variable names and use the janitor package to clean variable names.
+
+Refer to the R Assignments page on bCourses for detailed instructions and suggested R videos to review.
+
+In Weeks 1 to 3, we used line listing (a dataset with only the cases). In Weeks 4 to 6, we will use the outbreak investigation dataset (a matched case-control study).
+
+```{r}
+# import
+# ADD CODE HERE
+
+
+# look at the dataset
+# ADD CODE HERE. example: names(dataset)
+
+
+# janitor package clean names changes the column names to lower case & replaces
+# the spaces in column names with an underscore
+# ADD CODE HERE. example: newnamedataset<- dataset  %>% janitor::clean_names()
+
+```
+
+## Step 3: Subset the data (all code is provided).
+
+The data set contains more records than needed for the matched case-control study. Thus, you will have to subset the data in order to get the study data set for the case-control analysis.
+
+```{r}
+## Select only cases that have matched controls
+ecoli2 <- ecoli1 %>% 
+  filter(cdcid !="CDC001" & cdcid !="CDC006" & cdcid !="CDC009" & cdcid !="CDC012" & 
+           cdcid !="CDC015" & cdcid !="CDC022" & cdcid !="CDC023" & cdcid !="CDC024" & 
+           cdcid !="CDC037" & cdcid !="CDC043" & cdcid !="CDC045" & cdcid !="CDC046" & 
+           cdcid !="CDC048" & cdcid !="CDC049" & cdcid !="CDC067" & cdcid !="CDC068")   
+
+## Some cases have multiple controls
+ecoli2 %>%  filter(cdcid == "CDC047")  %>% tabyl(case)
+
+## Only keep controlletter=A for cdcid=="CDC047"
+x<-which(ecoli2$cdcid =="CDC047" & ecoli2$controlletter=="B")   
+ecoli3 <-ecoli2[-x, ]    
+
+dim(ecoli3)
+```
+
+## Step 4: Tabulate number of total cases and total controls in the cleaned dataset.
+
+In Week 6, these are the numbers you'll add to the column headings in the provided table template. 
+
+```{r}
+# ADD CODE HERE
+```
+
+## Step 5: Look at the strawberry variable. For conditional logistic regression, all values need to be 0 or 1. Recode other values to missing. 
+
+```{r}
+# ADD CODE HERE
+```
+
+## Step 6: Tabulate the count of cases who ate strawberries. Tabulate the count of controls who ate strawberries. 
+
+```{r}
+# ADD CODE HERE
+```
+
+## Step 7: Calculate the percent exposed among all cases. Calculate the percent exposed among all controls.
+
+```{r}
+# ADD CODE HERE
+```
+
+
+
+--------------------------------------------------------------------------------
+
+# Week 5 - Data Check for the Hypothesis Testing Assignment
+
+Refer to the R Assignments page on bCourses for detailed instructions and suggested R videos to review.
+
+## Step 1: Create a numeric variable that identifies each pair (all code is provided). This is called strata in the regression code. First, select last two characters of the CDCID string/character variable (new variable stratachar). Then, convert to a numeric format (new variable stratanum).
+
+```{r}
+ecoli3$stratachar<-substr(ecoli3$cdcid,start=5,stop=6)
+
+ecoli3 %>%  tabyl(stratachar)
+
+ecoli3$stratanum<-as.numeric(ecoli3$stratachar)
+
+ecoli3 %>%  tabyl(stratachar,stratanum)
+```
+
+## Step 2: Conditional logistic regression.
+ 
+```{r}
+# ADD CODE HERE
+```
+
+
+
+--------------------------------------------------------------------------------
+
+# Week 6 – Hypothesis Testing Assignment Final Submission
+
+
+For your final submission, we suggest you make a copy of this Rmd and then reformat it to meet the requirements of the final submission, as detailed on the R Assignments page on bCourses.
+
